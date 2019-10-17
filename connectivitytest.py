@@ -1,5 +1,4 @@
 from lightning import LightningRpc
-import random
 
 l5 = LightningRpc("/home/utz/.lightning/lightning-rpc")
 
