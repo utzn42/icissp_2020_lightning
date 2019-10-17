@@ -1,15 +1,10 @@
 from lightning import LightningRpc
+import random
 
-l1 = LightningRpc("/tmp/")
+l5 = LightningRpc("/home/utz/.lightning/lightning-rpc")
 
-# Traceback (most recent call last):
-# File "/home/utz/Desktop/ba-code/ba-nisslmueller/connectivitytest.py", line 14, in <module>
-#  info1 = l1.getinfo()
-# File "/home/utz/Desktop/lightning/contrib/pylightning/lightning/lightning.py", line 606, in getinfo
-#  return self.call("getinfo")
-# File "/home/utz/Desktop/lightning/contrib/pylightning/lightning/lightning.py", line 221, in call
-#  sock.connect(self.socket_path)
-# ConnectionRefusedError: [Errno 111] Connection refused
+info5 = l5.getinfo()
+print(info5)
 
-info1 = l1.getinfo()
-print(info1)
+funds = l5.listfunds()
+print(funds)
