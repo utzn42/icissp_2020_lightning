@@ -1,7 +1,8 @@
-"""This file contains helper classes and functions which facilitate data handling in other programs and increase
+"""This file contains helper classes which facilitate data handling in other programs and increase
 their readability. """
 
-import json
+from scapy.fields import ShortEnumField, X3BytesField
+from scapy.packet import Packet
 
 
 class InitInfo:
@@ -56,7 +57,9 @@ class ChannelInfo:
             self.total_btc += channel["msatoshi_total"] / 100000000
 
 
-def print_json(raw_data):
-    """Prints a JSON object, and parses unknown data types into strings."""
-
-    print(json.dumps(raw_data, indent=4, sort_keys=True, default=str))
+class PingPong(Packet):
+    name = "ping"
+    fields_desc = [
+        ShortEnumField("type", 18, {18: "ping", 19: "pong"}),
+        X3BytesField("data", 0)
+    ]

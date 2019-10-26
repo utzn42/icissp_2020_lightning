@@ -5,7 +5,7 @@ import argparse
 
 from lightning import LightningRpc
 
-import help_utils as utils
+import util
 
 # Parse command line arguments.
 parser = argparse.ArgumentParser()
@@ -23,7 +23,7 @@ def initialize(rpc_path: str) -> LightningRpc:
     print("Loading RPC object at: " + rpc_path + "..." + "\n")
     try:
         temp_rpc_object = LightningRpc(rpc_path)
-        info = utils.InitInfo(temp_rpc_object.getinfo())
+        info = util.classes.InitInfo(temp_rpc_object.getinfo())
         print("Node ID: " + info.node_id + "\n" + "Block height: " + str(
             info.block_height) + " (" + info.network + ")" + "\n"
               + "Version: " + info.version + "\n")
@@ -36,7 +36,7 @@ def print_address_balances(funds: dict):
     """Takes in a dictionary returned by LightningRpc.listfunds() and prints addresses and corresponding funds for the
     current instance. """
 
-    local_funds = utils.FundsInfo(funds)
+    local_funds = util.classes.FundsInfo(funds)
     print("Addresses / Funds (BTC):")
     print(local_funds.address_funds, end="\n \n")
 
@@ -45,7 +45,7 @@ def print_channel_info(peers: dict):
     """Takes in a dictionary returned by LightningRpc.listpeers() and displays an executive summary on the amount of
     connections as well as the amount of BTC within active channels. """
 
-    channel_info = utils.ChannelInfo(peers)
+    channel_info = util.classes.ChannelInfo(peers)
     print("Currently connected to " + str(len(peers.keys())) + " peer(s) over " + str(
         channel_info.count) + " channel(s).")
     print("Total BTC count: " + str(channel_info.total_btc) + "\n")
