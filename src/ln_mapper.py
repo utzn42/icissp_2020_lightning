@@ -1,14 +1,29 @@
-from util.classes import PingPong
-from scapy.all import *
-from scapy.layers.inet import IP, TCP
+import argparse
 
-# TODO: Set up full TCP handshake
-source_port = 9735
-dest_port = 9735
-ip_packet = IP(src="192.168.0.59", dst="88.99.209.230")
-tcp_syn = TCP(sport=source_port, dport=dest_port, flags="S", seq=1000)
-ping = PingPong()
-synack = sr1(ip_packet / tcp_syn)
-ack = TCP(sport=source_port, dport=dest_port, flags='A', seq=synack.ack + 1, ack=synack.seq + 1)
-send(ip_packet / ack)
-sr1(ip_packet/TCP/ping)
+from netaddr import IPNetwork
+from scapy.layers.inet import IP, TCP
+from requests import get
+from scapy.sendrecv import sr1, send
+
+from util.classes import PingPong
+
+# Parse command line arguments.
+parser = argparse.ArgumentParser(
+    description="Takes in an IP range and returns the IP address of Lightning nodes within that range.")
+parser.add_argument("ip_range", type=str, help='IP range to be probed', default="192.168.0.0/24")
+args = parser.parse_args()
+
+src = get('https://api.ipify.org').text
+sport = dport = 9735
+
+for ip in IPNetwork(args.ip_range):
+    dst = ip
+
+    # SYN
+    ip = IP(src=src, dst=dst)
+    SYN = TCP(sport=sport, dport=dport, flags='S', seq=1000)
+    SYNACK = sr1(ip / SYN)
+
+    # ACK
+    ACK = TCP(sport=sport, dport=dport, flags='A', seq=SYNACK.ack, ack=SYNACK.seq + 1)
+    send(ip / ACK / PingPong())

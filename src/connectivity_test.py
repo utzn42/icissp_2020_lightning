@@ -4,13 +4,15 @@ and the corresponding balances as well as a summary of connected peers and chann
 import argparse
 
 from lightning import LightningRpc
-
-import util
+from util.classes import InitInfo, FundsInfo, ChannelInfo
 
 # Parse command line arguments.
-parser = argparse.ArgumentParser()
+
+parser = argparse.ArgumentParser(
+    description="Tests the connection of a local Lightning RPC objects and displays some basic information.")
 parser.add_argument("-f", "--file",
-                    help="file path of the callable RPC object", default="/home/utz/.lightning/lightning-rpc",
+                    help="file path of the callable RPC object",
+                    default="\\\\192.168.0.60\\Kynes_Home\\.lightning\\lightning-rpc",
                     dest="rpc_path")
 args = parser.parse_args()
 
@@ -23,7 +25,7 @@ def initialize(rpc_path: str) -> LightningRpc:
     print("Loading RPC object at: " + rpc_path + "..." + "\n")
     try:
         temp_rpc_object = LightningRpc(rpc_path)
-        info = util.classes.InitInfo(temp_rpc_object.getinfo())
+        info = InitInfo(temp_rpc_object.getinfo())
         print("Node ID: " + info.node_id + "\n" + "Block height: " + str(
             info.block_height) + " (" + info.network + ")" + "\n"
               + "Version: " + info.version + "\n")
@@ -36,7 +38,7 @@ def print_address_balances(funds: dict):
     """Takes in a dictionary returned by LightningRpc.listfunds() and prints addresses and corresponding funds for the
     current instance. """
 
-    local_funds = util.classes.FundsInfo(funds)
+    local_funds = FundsInfo(funds)
     print("Addresses / Funds (BTC):")
     print(local_funds.address_funds, end="\n \n")
 
@@ -45,7 +47,7 @@ def print_channel_info(peers: dict):
     """Takes in a dictionary returned by LightningRpc.listpeers() and displays an executive summary on the amount of
     connections as well as the amount of BTC within active channels. """
 
-    channel_info = util.classes.ChannelInfo(peers)
+    channel_info = ChannelInfo(peers)
     print("Currently connected to " + str(len(peers.keys())) + " peer(s) over " + str(
         channel_info.count) + " channel(s).")
     print("Total BTC count: " + str(channel_info.total_btc) + "\n")
