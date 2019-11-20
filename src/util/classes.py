@@ -55,11 +55,3 @@ class ChannelInfo:
         for channel in channels:
             # Divide by 100000000 to convert Millisatoshi to BTC.
             self.total_btc += channel["msatoshi_total"] / 100000000
-
-
-class PingPong(Packet):
-    name = "ping"
-    fields_desc = [
-        ShortEnumField("type", 18, {18: "ping", 19: "pong"}),
-        X3BytesField("data", 0)
-    ]

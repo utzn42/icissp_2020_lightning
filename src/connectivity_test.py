@@ -3,35 +3,17 @@ and the corresponding balances as well as a summary of connected peers and chann
 
 import argparse
 
-from lightning import LightningRpc
-from util.classes import InitInfo, FundsInfo, ChannelInfo
-
+from util.classes import FundsInfo, ChannelInfo
 # Parse command line arguments.
+from util.functions import initialize
 
 parser = argparse.ArgumentParser(
     description="Tests the connection of a local Lightning RPC objects and displays some basic information.")
 parser.add_argument("-f", "--file",
                     help="file path of the callable RPC object",
-                    default="\\\\192.168.0.60\\Kynes_Home\\.lightning\\lightning-rpc",
+                    default="/home/kynes/.lightning/lightning-rpc",
                     dest="rpc_path")
 args = parser.parse_args()
-
-
-def initialize(rpc_path: str) -> LightningRpc:
-    """"Takes the path of the RPC file as a parameter and runs getinfo(). If successful, some basic information is
-    printed, and an RPC object is returned for further use. If not, an error is raised, informing the user of an
-    incorrect file path. """
-
-    print("Loading RPC object at: " + rpc_path + "..." + "\n")
-    try:
-        temp_rpc_object = LightningRpc(rpc_path)
-        info = InitInfo(temp_rpc_object.getinfo())
-        print("Node ID: " + info.node_id + "\n" + "Block height: " + str(
-            info.block_height) + " (" + info.network + ")" + "\n"
-              + "Version: " + info.version + "\n")
-        return temp_rpc_object
-    except FileNotFoundError:
-        print("Could not load RPC object at " + rpc_path + "." + "\n")
 
 
 def print_address_balances(funds: dict):
