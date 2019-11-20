@@ -46,10 +46,11 @@ route_failure_counter = 0
 iterations = 0
 print_var = display_progress_bar(0.0)
 
+
 # Helper function for probing loop. Adds nodes appearing in a route to list if they aren't known yet.
 def add_route_node_to_list(route):
     for node in route["route"]:
-        if node["id"] not in probing_peer_list and node["id"] not in gossip_peer_list:
+        if node["id"] not in probing_peer_list and node["id"] not in gossip_peer_list:  # Issue #9.
             probing_peer_list.append(node["id"])
 
 
