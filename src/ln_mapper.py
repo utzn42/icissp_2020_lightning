@@ -1,6 +1,8 @@
 import argparse
 import json
 
+from lightning import RpcError
+
 from util.functions import initialize, delete_file_content, display_progress_bar
 
 # Retrieve arguments and parse them into variables.
@@ -44,7 +46,6 @@ route_failure_counter = 0
 iterations = 0
 print_var = display_progress_bar(0.0)
 
-
 # Helper function for probing loop. Adds nodes appearing in a route to list if they aren't known yet.
 def add_route_node_to_list(route):
     for node in route["route"]:
@@ -65,7 +66,7 @@ for peer in gossip_peer_list:
 
         if iterations / len(gossip_peer_list) - print_var > 0.1:
             print_var = display_progress_bar(iterations / len(gossip_peer_list))
-    except:
+    except RpcError:
         route_failure_counter += 1
 
 peer_dict = {"gossip_peers": gossip_peer_list, "probing_peers": probing_peer_list}
