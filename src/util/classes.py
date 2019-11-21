@@ -1,9 +1,6 @@
 """This file contains helper classes which facilitate data handling in other programs and increase
 their readability. """
 
-from scapy.fields import ShortEnumField, X3BytesField
-from scapy.packet import Packet
-
 
 class InitInfo:
     """Takes in a getinfo() return object and stores the node ID, block height, operating chain and protocol version
@@ -39,7 +36,7 @@ class FundsInfo:
 
 
 class ChannelInfo:
-    """Takes in a listpeers() return objects and counts the amount of active peers and channels. It then calculates
+    """Takes in a listpeers() return object and counts the amount of active peers and channels. It then calculates
     the total amount of BTC locked within these channels. """
 
     def __init__(self, peers: dict):
@@ -55,3 +52,19 @@ class ChannelInfo:
         for channel in channels:
             # Divide by 100000000 to convert Millisatoshi to BTC.
             self.total_btc += channel["msatoshi_total"] / 100000000
+
+
+class Channel:
+    def __init__(self, channel):
+        self.src = channel["source"]
+        self.dest = channel["destination"]
+        self.short_id = channel["short_channel_id"]
+        self.public = channel["public"]
+        self.sat = channel["satoshis"]
+        self.payment_amounts = {"min": channel["htlc_minimum_msat"].millisatoshis / 1000.0,
+                                "max": channel["htlc_maximum_msat"].millisatoshis / 1000.0}
+
+        self.active = channel["active"]
+        self.last_update = channel["last_update"]
+        self.fees = {"base": channel["base_fee_millisatoshi"] / 1000.0, "per_mn": channel["fee_per_millionth"]}
+        self.delay = channel["delay"]
