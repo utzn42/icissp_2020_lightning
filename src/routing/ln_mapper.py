@@ -15,13 +15,9 @@ parser.add_argument("-f", "--file",
                     default="/home/kynes/.lightning/lightning-rpc",
                     dest="rpc_path")
 parser.add_argument("-o", "--output",
-                    help="file path of the JSON output file",
-                    default=os.path.join(os.pardir),
-                    dest="output_path")
-parser.add_argument("-n", "--output-name",
-                    help="file name of the JSON output file",
-                    default="network_data.json",
-                    dest="output_name")
+                    help="path of the JSON output file",
+                    default=os.getcwd() + "/network_data.json",
+                    dest="output_file")
 parser.add_argument("-p", "--probing-level",
                     help="specifies whether and how extensively to look for active, unannounced channels (max=5)",
                     default=0,
@@ -34,7 +30,7 @@ print("Retrieving channel gossip information...")
 peer_channels = rpc_object.listchannels()
 
 # Flush output file, in case of previously run test still being present.
-delete_file_content(args.output_name)
+delete_file_content(args.output_file)
 
 # Set up storage lists & variables for parsing loop
 print("Parsing peers & channels...")
@@ -90,7 +86,7 @@ if args.probing_level > 0:
             route_failure_counter += 1
 
 # Write results to JSON file which was specified in parameters. Default: ../network_data.json
-print("Copying peer & channel list to " + args.output_path + "/" + args.output_name)
-json_dict = {"peers": peer_list, "channels:": channel_list}
-with open(args.output_name, "at") as write_file:
+print("Copying peer & channel list to " + args.output_file)
+json_dict = {"peers": peer_list, "channels": channel_list}
+with open(args.output_file, "at") as write_file:
     json.dump(json_dict, write_file)
