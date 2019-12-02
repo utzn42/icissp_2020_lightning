@@ -2,9 +2,9 @@
 their readability. """
 
 import json
-from lightning import LightningRpc
+from lightning import LightningRpc, RpcError
 
-from util.classes import InitInfo
+from utils.classes import InitInfo
 
 
 def print_json(raw_data):
@@ -37,6 +37,7 @@ def delete_file_content(file):
 
 
 def display_progress_bar(ratio):
+    """Displays a basic command line progress bar based on input completion ratio."""
     if ratio > 0.9:
         print("90%...")
         return 0.9
@@ -67,3 +68,26 @@ def display_progress_bar(ratio):
     print("0%...", end="")
     return 0.0
 
+
+def find_in_channels(input_file, node_id):
+    """Finds a given node (id) in a list of channels which is stored in a JSON file (input_file). See ln_mapper.py"""
+
+    channel_results = []
+    with open(input_file) as file:
+        network_data = json.load(file)
+        for channel in network_data['channels']:
+            if channel["src"] == node_id or channel["dest"] == node_id:
+                channel_results.append(channel)
+    if len(channel_results) == 0:
+        print(node_id + " not found in list of active channels.")
+        return None
+    return channel_results
+
+
+def show_route(rpc_object, src, dest, amount_msat):
+    try:
+        route = rpc_object.getroute(fromid=src, node_id=dest, msatoshi=amount_msat, riskfactor=0)
+        print("Successfully found a route for " + amount_msat + " msat from " + src + " to " + dest + ":")
+        print_json(route)
+    except RpcError:
+        print("Could not find a route from " + src + " to " + dest + "!")

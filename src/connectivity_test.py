@@ -3,9 +3,9 @@ and the corresponding balances as well as a summary of connected peers and chann
 
 import argparse
 
-from util.classes import FundsInfo, ChannelInfo
+from utils.classes import FundsInfo, ChannelInfo
 # Parse command line arguments.
-from util.functions import initialize
+from utils.functions import initialize
 
 parser = argparse.ArgumentParser(
     description="Tests the connection of a local Lightning RPC objects and displays some basic information.")

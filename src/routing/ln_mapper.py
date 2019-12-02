@@ -4,15 +4,15 @@ import os
 
 from lightning import RpcError
 
-from util.classes import Channel
-from util.functions import initialize, delete_file_content, print_json, display_progress_bar
+from utils.classes import Channel
+from utils.functions import initialize, delete_file_content, print_json, display_progress_bar
 
 # Retrieve arguments and parse them into variables.
 parser = argparse.ArgumentParser(
     description="Constructs a local view of all currently active LN nodes and channels.")
 parser.add_argument("-f", "--file",
                     help="file path of the callable RPC object",
-                    default="/home/kynes/.lightning/lightning-rpc",
+                    default="/home/kynes/.lightning/testnet/lightning-rpc",
                     dest="rpc_path")
 parser.add_argument("-o", "--output",
                     help="path of the JSON output file",
@@ -28,7 +28,7 @@ args = parser.parse_args()
 rpc_object = initialize(args.rpc_path)
 print("Retrieving channel gossip information...")
 peer_channels = rpc_object.listchannels()
-print_json(peer_channels)
+# print_json(peer_channels)
 
 # Flush output file, in case of previously run test still being present.
 delete_file_content(args.output_file)
