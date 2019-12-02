@@ -9,7 +9,7 @@ from util.functions import initialize, delete_file_content, print_json, display_
 
 # Retrieve arguments and parse them into variables.
 parser = argparse.ArgumentParser(
-    description="Tests the connection of a local Lightning RPC objects and displays some basic information.")
+    description="Constructs a local view of all currently active LN nodes and channels.")
 parser.add_argument("-f", "--file",
                     help="file path of the callable RPC object",
                     default="/home/kynes/.lightning/lightning-rpc",
@@ -28,6 +28,7 @@ args = parser.parse_args()
 rpc_object = initialize(args.rpc_path)
 print("Retrieving channel gossip information...")
 peer_channels = rpc_object.listchannels()
+print_json(peer_channels)
 
 # Flush output file, in case of previously run test still being present.
 delete_file_content(args.output_file)
