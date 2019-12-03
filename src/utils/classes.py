@@ -26,7 +26,7 @@ class FundsInfo:
             if output["address"] in self.address_funds:
 
                 # Divide by 100000000 to convert Millisatoshi to BTC.
-                self.address_funds[output["address"]] += output["value"] / 100000000
+                self.address_funds[output["address"]] += output["value"] / 100000
 
             # If the address does not exist, create a new entry for the address and store the corresponding balance.
             else:
@@ -51,7 +51,7 @@ class ChannelInfo:
         self.total_btc = 0
         for channel in channels:
             # Divide by 100000000 to convert Millisatoshi to BTC.
-            self.total_btc += channel["msatoshi_total"] / 100000000
+            self.total_btc += channel["msatoshi_total"] / 100000000000
 
 
 class Channel:

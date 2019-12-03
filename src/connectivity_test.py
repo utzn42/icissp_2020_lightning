@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(
     description="Tests the connection of a local Lightning RPC objects and displays some basic information.")
 parser.add_argument("-f", "--file",
                     help="file path of the callable RPC object",
-                    default="/home/kynes/.lightning/lightning-rpc",
+                    default="/home/kynes/.lightning/testnet/lightning-rpc",
                     dest="rpc_path")
 args = parser.parse_args()
 
@@ -32,7 +32,7 @@ def print_channel_info(peers: dict):
     channel_info = ChannelInfo(peers)
     print("Currently connected to " + str(len(peers.keys())) + " peer(s) over " + str(
         channel_info.count) + " channel(s).")
-    print("Total BTC count: " + str(channel_info.total_btc) + "\n")
+    print("Total BTC count in channels: " + str(channel_info.total_btc) + "\n")
 
 
 # Main program sequence starts here:

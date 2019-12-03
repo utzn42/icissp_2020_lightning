@@ -87,7 +87,22 @@ def find_in_channels(input_file, node_id):
 def show_route(rpc_object, src, dest, amount_msat):
     try:
         route = rpc_object.getroute(fromid=src, node_id=dest, msatoshi=amount_msat, riskfactor=0)
-        print("Successfully found a route for " + amount_msat + " msat from " + src + " to " + dest + ":")
+        print("Successfully found a route for " + str(amount_msat) + " msat from " + src + " to " + dest + ":")
         print_json(route)
     except RpcError:
         print("Could not find a route from " + src + " to " + dest + "!")
+
+
+def find_max_amount_for_route(rpc_object, src, dest, sensitivity=2):
+    done = False
+    amount_msat = 1000
+    while not done:
+        try:
+            rpc_object.getroute(fromid=src, node_id=dest, msatoshi=amount_msat, riskfactor=0)
+            amount_msat = amount_msat * sensitivity
+        except RpcError as r:
+            if (1 - 1 / sensitivity < 0.1):
+                done = True
+                print(r)
+            sensitivity = sensitivity - 0.001
+    return amount_msat

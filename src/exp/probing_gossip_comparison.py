@@ -2,7 +2,7 @@
 
 import argparse
 
-from utils.functions import initialize, show_route
+from utils.functions import initialize, show_route, find_max_amount_for_route
 
 # Retrieve arguments and parse them into variables.
 parser = argparse.ArgumentParser(
@@ -13,15 +13,15 @@ parser.add_argument("-f", "--file",
                     dest="rpc_path")
 parser.add_argument("-s", "--src",
                     help="Source node ID",
-                    default="036e389fce387e10d20ff2d5e1c6f78f530fe030638f6a3e6cfad068799a2ae15f",
+                    default="039d813433a915263fe53cad421057e4d3e3467c46f9690e239283a4b10b280e6d",
                     dest="src_id")
 parser.add_argument("-d", "--dest",
                     help="destination node ID",
-                    default="02ce69f8df301a64d4d00a3a9473d040f2e7f86479464b7e1afca78c643fc6dbc1",
+                    default="028020f074310d236c80a581f5f065f24463388e8f0eca713b90a6ad95a2c9b7c0",
                     dest="dest_id")
 parser.add_argument("-a", "--amount",
                     help="amount to send in millisatoshi",
-                    default=1000,
+                    default=99999900,
                     dest="amount_msat")
 args = parser.parse_args()
 
@@ -29,3 +29,4 @@ rpc_object = initialize(args.rpc_path)
 
 # Probe for route between src_id and dest_id
 show_route(rpc_object, args.src_id, args.dest_id, args.amount_msat)
+print(find_max_amount_for_route(rpc_object, args.src_id, args.dest_id))
