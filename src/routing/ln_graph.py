@@ -3,11 +3,15 @@ import json
 import os
 
 import matplotlib.pyplot as plt
-
 import networkx as nx
 
-parser = argparse.ArgumentParser(
-    description="Visualizes.")
+from routing.ln_mapper_gossip import map_ln
+
+parser = argparse.ArgumentParser(description="Visualizes.")
+parser.add_argument("-r", "--rpc-file",
+                    help="file path of the callable RPC object",
+                    default="/home/kynes/.lightning/testnet/lightning-rpc",
+                    dest="rpc_path")
 parser.add_argument("-g", "--gui-only",
                     action='store_true',
                     help="Only visualizes data specified in provided JSON file (-f).",
@@ -22,7 +26,7 @@ ln_graph = nx.Graph()
 
 if not args.gui_only:
     print("Initialized graphing. Starting LN mapper...")
-    os.system('python3 ./ln_mapper.py')
+    map_ln()
 
 with open(args.input_file, "r") as net_data:
     peer_channel_dict = json.load(net_data)

@@ -2,6 +2,8 @@
 their readability. """
 
 import json
+from math import sqrt
+
 from lightning import LightningRpc, RpcError
 
 from utils.classes import InitInfo
@@ -70,7 +72,7 @@ def display_progress_bar(ratio):
 
 
 def find_in_channels(input_file, node_id):
-    """Finds a given node (id) in a list of channels which is stored in a JSON file (input_file). See ln_mapper.py"""
+    """Finds a given node (id) in a list of channels which is stored in a JSON file (input_file). See ln_mapper_gossip.py"""
 
     channel_results = []
     with open(input_file) as file:
@@ -93,16 +95,30 @@ def show_route(rpc_object, src, dest, amount_msat):
         print("Could not find a route from " + src + " to " + dest + "!")
 
 
-def find_max_amount_for_route(rpc_object, src, dest, sensitivity=2):
-    done = False
+def find_max_amount_for_route(rpc_object, src, dest, sensitivity=2.0):
     amount_msat = 1000
-    while not done:
+    initial_loop = True
+
+    # Geometric increase
+    while initial_loop:
         try:
-            rpc_object.getroute(fromid=src, node_id=dest, msatoshi=amount_msat, riskfactor=0)
-            amount_msat = amount_msat * sensitivity
+            test_amount_msat = int(amount_msat * sensitivity)
+            route = rpc_object.getroute(fromid=src, node_id=dest, msatoshi=test_amount_msat, riskfactor=0)
+            amount_msat = test_amount_msat
         except RpcError as r:
-            if (1 - 1 / sensitivity < 0.1):
-                done = True
-                print(r)
-            sensitivity = sensitivity - 0.001
-    return amount_msat
+            sensitivity = sqrt(sensitivity)
+            if sensitivity == 1:
+                initial_loop = False
+
+    # Linear increase
+    increment_amount = 1000.0
+    while True:
+        try:
+            test_amount_msat = int(amount_msat + increment_amount)
+            route = rpc_object.getroute(fromid=src, node_id=dest, msatoshi=test_amount_msat, riskfactor=0,
+                                        fuzzpercent=0)
+            amount_msat = test_amount_msat
+        except RpcError as r:
+            increment_amount = increment_amount / 10
+            if increment_amount < 1:
+                return int(amount_msat - increment_amount)
