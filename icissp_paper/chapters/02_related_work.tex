@@ -1,0 +1,19 @@
+\section{Related Work}
+\label{sec:related_work}
+
+The Lightning
+
+\noindent
+Several papers have already analyzed security and privacy concerns in the Lightning Network. \cite{rohrer2019discharged} focuses on channel-based attacks and proposes methods to exhaust a victim's channels via malicious routing (up to potentially total isolation from the victim's neighbors) and to deny service to a victim via malicious HTLC construction. \newline
+
+\noindent
+\cite{tochner2019hijacking} proposes a denial of service attack by creating low-fee channels to other nodes, which are then naturally used to route payments for fee-minimizing network participants and then dropping the payment packets, therefore forcing the sender to await the expiration of the already set-up HTLCs. \newline
+
+\noindent
+\cite{balancehiding} provides a closer look into the privacy-performance trade-off inherent in LN routing. The authors also propose an attack to discover channel balances within the network. \newline
+
+\noindent
+\cite{wang2019flash} examines the LN routing process in more detail and proposes a split routing approach, dividing payments into large size and small size transactions. The authors show that by routing large payments dynamically to avoid superfluous fees and by routing small payments via a lookup mechanism to reduce excessive probing, the overall success rate can be maintained while significantly reducing performance overhead. \newline
+
+\noindent
+General information on the background of the Lightning network along with technical specifications can be found at \cite{ln_whitepaper}, \cite{lightningrfc} and \cite{lnbook}. The c-lightning GitHub repository can be found at \cite{clightninggit}.
