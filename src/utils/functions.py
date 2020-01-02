@@ -96,10 +96,12 @@ def show_route(rpc_object, src, dest, amount_msat):
 
 
 def find_max_amount_for_route(rpc_object, src, dest, sensitivity=2.0):
+    """Find an approximation of the maximum amount of funds (in millisatoshi) which can be transferred from src to
+    dest. """
     amount_msat = 1000
     initial_loop = True
 
-    # Geometric increase
+    # Geometric (fast) increase
     while initial_loop:
         try:
             test_amount_msat = int(amount_msat * sensitivity)
@@ -110,7 +112,7 @@ def find_max_amount_for_route(rpc_object, src, dest, sensitivity=2.0):
             if sensitivity == 1:
                 initial_loop = False
 
-    # Linear increase
+    # Linear (slow) increase
     increment_amount = 1000.0
     while True:
         try:
