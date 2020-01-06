@@ -1,19 +1,17 @@
 import argparse
-import string
-import random
 
-from lightning import LightningRpc, RpcError
+from lightning import LightningRpc
 
 from icissp_paper.src.routing.concurrency_classes import *
 
 parser = argparse.ArgumentParser(description="Probing Attack")
 parser.add_argument("-r", "--rpc-file",
                     help="file path of the callable RPC object",
-                    default="/home/kynes/.lightning/testnet/lightning-rpc",
+                    default="/home/kynes/.lightning/local_node/testnet/lightning-rpc",
                     dest="rpc_path")
 parser.add_argument("-c", "--channel",
                     help="short channel ID of the channel to be monitored",
-                    default="1292062x103x1",
+                    default="1638564x67x0",
                     dest="target_channel")
 args = parser.parse_args()
 
@@ -37,12 +35,6 @@ def find_channel_by_short_id():
 local_rpc_object = initialize(args.rpc_path)
 
 channel = find_channel_by_short_id()
-print(channel["amount_msat"].millisatoshis)
 
-#p = Probe(local_rpc_object, channel)
-#rp = ReverseProbe(local_rpc_object, channel)
-#p.start()
-#rp.start()
-
-print(local_rpc_object.getroute("028020f074310d236c80a581f5f065f24463388e8f0eca713b90a6ad95a2c9b7c0", msatoshi=100000,
-                          riskfactor=1))
+p = Probe(local_rpc_object, channel)
+p.run()
