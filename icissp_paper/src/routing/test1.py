@@ -11,7 +11,7 @@ parser.add_argument("-r", "--rpc-file",
                     dest="rpc_path")
 parser.add_argument("-c", "--channel",
                     help="short channel ID of the channel to be monitored",
-                    default="1638564x67x0",
+                    default="1638669x34x0",
                     dest="target_channel")
 args = parser.parse_args()
 

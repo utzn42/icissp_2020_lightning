@@ -13,17 +13,17 @@ class Probe():
         self.channel = channel
         self.payment_hash = None
         self.params = None
-        self.route = None
+        self.route = self.probe()
 
-    def probe(self, msat):
+    def probe(self, msat=1000):
         self.payment_hash = ''.join(random.choice(string.hexdigits) for _ in range(64))
         self.params = {
             "node_id": "028020f074310d236c80a581f5f065f24463388e8f0eca713b90a6ad95a2c9b7c0",
             "msatoshi": int(msat),
             "riskfactor": 1
         }
-        self.route = self.rpc_object.getroute(**self.params)["route"]
         try:
+            self.route = self.rpc_object.getroute(**self.params)["route"]
             self.rpc_object.sendpay(self.route, self.payment_hash)
             self.rpc_object.waitsendpay(self.payment_hash)
             print("Uh-oh. Guessed payment hash correctly: " + self.payment_hash)
@@ -43,7 +43,7 @@ class Probe():
                 max_msat = amount_msat
             if error == 205:
                 print("No suitable route found. Check connection.")
-                return None
+                return 0
             if max_msat - min_msat < 1000:
                 return amount_msat
             amount_msat = int((min_msat + max_msat) / 2)
