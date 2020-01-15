@@ -1,8 +1,7 @@
 import argparse
 
-from lightning import LightningRpc
-
 from icissp_paper.src.routing.concurrency_classes import *
+from icissp_paper.src.utils.commons import initialize
 
 parser = argparse.ArgumentParser(description="Probing Attack")
 parser.add_argument("-r", "--rpc-file",
@@ -11,18 +10,9 @@ parser.add_argument("-r", "--rpc-file",
                     dest="rpc_path")
 parser.add_argument("-c", "--channel",
                     help="short channel ID of the channel to be monitored",
-                    default="1638669x34x0",
+                    default="1638671x41x0",
                     dest="target_channel")
 args = parser.parse_args()
-
-
-# Initialize RPC object
-def initialize(rpc_path):
-    try:
-        temp_rpc_object = LightningRpc(rpc_path)
-        return temp_rpc_object
-    except FileNotFoundError:
-        print("Could not load RPC object at " + rpc_path + "." + "\n")
 
 
 # Find total balance for targeted channel from gossip_store
